@@ -12,7 +12,7 @@ You need to install them both. Preferably through HACS. We have separated two re
 
 ## 📋 Requirements
 
-- Home Assistant **2025.3.0** or newer. The integration uses config subentries, which were introduced in that release.
+- Home Assistant **2025.4.0** or newer. The integration uses config subentries, which were introduced in 2025.3, and helpers for them that were added in 2025.4.
 - Access to a [vbb-rest](https://github.com/derhuerst/vbb-rest) API server. By default the public instance at `https://v6.vbb.transport.rest` is used, but you can point the integration at your own — see [Using your own API server](#-using-your-own-api-server).
 
 ## 💿 Installation
