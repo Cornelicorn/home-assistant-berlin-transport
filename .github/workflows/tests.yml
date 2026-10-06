@@ -1,0 +1,37 @@
+name: Tests
+on: [push, pull_request]
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    name: Pytest (Home Assistant ${{ matrix.homeassistant }})
+    strategy:
+      fail-fast: false
+      matrix:
+        # Each release of pytest-homeassistant-custom-component is built for
+        # exactly one Home Assistant release, so bump them together.
+        include:
+          # The minimum version, as in hacs.json.
+          - homeassistant: "2025.4.0"
+            pytest-homeassistant: "0.13.232"
+            python: "3.13"
+          # The last release for Python 3.13, which the code quality checks use.
+          - homeassistant: "2026.2.3"
+            pytest-homeassistant: "0.13.316"
+            python: "3.13"
+          # The latest release.
+          - homeassistant: "2026.9.4"
+            pytest-homeassistant: "0.13.367"
+            python: "3.14"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: pip install --upgrade pip
+      # Naming both versions makes pip fail if they do not belong together.
+      - run: >-
+          pip install -r requirements-test.txt
+          pytest-homeassistant-custom-component==${{ matrix.pytest-homeassistant }}
+          homeassistant==${{ matrix.homeassistant }}
+      - run: pytest --cov=custom_components.berlin_transport --cov-report=term-missing

@@ -170,9 +170,12 @@ ruff format --diff .
 ruff check .
 pylint $(git ls-files '*.py')
 mypy $(git ls-files '*.py')
+pytest
 ```
 
 `requirements-dev.txt` installs Home Assistant itself, so mypy type-checks the `homeassistant`, `aiohttp` and `voluptuous` imports instead of ignoring them.
+
+The tests in `tests/` set the integration up in a Home Assistant test instance with [pytest-homeassistant-custom-component](https://github.com/MatthewFlamm/pytest-homeassistant-custom-component) and answer its API requests with mocked responses, so they need no network access. CI runs them against several Home Assistant releases: the minimum version, the last release for Python 3.13 and the latest release. Add `--cov=custom_components.berlin_transport` to see which code they cover.
 
 ## 🐛 Bug reports and feature requests
 

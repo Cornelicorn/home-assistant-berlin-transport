@@ -7,3 +7,7 @@ mypy
 # them. `homeassistant` ships a py.typed marker and pulls in aiohttp and
 # voluptuous.
 homeassistant>=2025.4.0
+
+# The test dependencies, so the linters can check the tests, and so the tests
+# can be run from the same environment.
+-r requirements-test.txt
