@@ -5,6 +5,8 @@ jobs:
   pytest:
     runs-on: ubuntu-latest
     name: Pytest (Home Assistant ${{ matrix.homeassistant }})
+    # Failing on the beta only warns, as the beta can still change.
+    continue-on-error: ${{ matrix.homeassistant == 'beta' }}
     strategy:
       fail-fast: false
       matrix:
@@ -23,9 +25,10 @@ jobs:
           - homeassistant: "2026.9.4"
             pytest-homeassistant: "0.13.367"
             python: "3.14"
-          # The current beta, to catch breaking changes before the release.
-          - homeassistant: "2026.10.0b2"
-            pytest-homeassistant: "0.13.369"
+          # The newest pytest-homeassistant-custom-component, which is built for
+          # the newest Home Assistant release, betas included. So this is the
+          # current beta, or the latest release while there is no beta.
+          - homeassistant: "beta"
             python: "3.14"
     steps:
       - uses: actions/checkout@v4
@@ -34,8 +37,18 @@ jobs:
           python-version: ${{ matrix.python }}
       - run: pip install --upgrade pip
       # Naming both versions makes pip fail if they do not belong together.
-      - run: >-
+      - if: matrix.pytest-homeassistant
+        run: >-
           pip install -r requirements-test.txt
           pytest-homeassistant-custom-component==${{ matrix.pytest-homeassistant }}
           homeassistant==${{ matrix.homeassistant }}
+      - if: "!matrix.pytest-homeassistant"
+        run: pip install -r requirements-test.txt
+      - name: Show the Home Assistant version
+        run: python -c "from homeassistant.const import __version__; print(__version__)"
       - run: pytest --cov=custom_components.berlin_transport --cov-report=term-missing
+      - if: failure() && matrix.homeassistant == 'beta'
+        run: >-
+          echo "::warning title=Home Assistant beta::The tests fail on the
+          Home Assistant beta. This does not fail the workflow, but should be
+          fixed before the release."

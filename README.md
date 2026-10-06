@@ -175,7 +175,7 @@ pytest
 
 `requirements-dev.txt` installs Home Assistant itself, so mypy type-checks the `homeassistant`, `aiohttp` and `voluptuous` imports instead of ignoring them.
 
-The tests in `tests/` set the integration up in a Home Assistant test instance with [pytest-homeassistant-custom-component](https://github.com/MatthewFlamm/pytest-homeassistant-custom-component) and answer its API requests with mocked responses, so they need no network access. CI runs them against several Home Assistant releases: the minimum version, the last release for Python 3.13, the latest release and the current beta. Add `--cov=custom_components.berlin_transport` to see which code they cover.
+The tests in `tests/` set the integration up in a Home Assistant test instance with [pytest-homeassistant-custom-component](https://github.com/MatthewFlamm/pytest-homeassistant-custom-component) and answer its API requests with mocked responses, so they need no network access. CI runs them against several Home Assistant releases: the minimum version, the last release for Python 3.13, the latest release and the newest beta. Failing on the beta only adds a warning. Add `--cov=custom_components.berlin_transport` to see which code they cover.
 
 ## 🐛 Bug reports and feature requests
 
