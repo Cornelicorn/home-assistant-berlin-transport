@@ -23,6 +23,10 @@ jobs:
           - homeassistant: "2026.9.4"
             pytest-homeassistant: "0.13.367"
             python: "3.14"
+          # The current beta, to catch breaking changes before the release.
+          - homeassistant: "2026.10.0b2"
+            pytest-homeassistant: "0.13.369"
+            python: "3.14"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
